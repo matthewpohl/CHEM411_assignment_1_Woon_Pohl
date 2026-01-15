@@ -1,0 +1,61 @@
+from machine import Pin, I2C
+import i2c_lcd, time
+
+button = Pin(12, Pin.IN, Pin.PULL_UP)
+screen = I2C(0, scl=Pin(22), sda=Pin(21))
+lcd = i2c_lcd.I2cLcd(screen, 0x27, 2, 16)
+
+press_start = None
+
+while True:
+    if button.value() == 0 and press_start is None: #button pressed and prevent bounce/recording several start times
+        press_start = time.ticks_ms()
+        
+    elif button.value() == 1 and press_start is not None:  # press_start is not blank
+        press_end = time.ticks_ms()
+        duration = time.ticks_diff(press_end, press_start) #time that button was released - time it was started in ms
+        press_start = None # clears start time so button can be pressed again
+        
+        if duration < 500:
+            lcd.clear()
+            lcd.move_to(2, 0) #center text
+            lcd.putstr('short press')
+            lcd.move_to(5, 1)
+            lcd.putstr(str(duration)) #print a variable (i think puts it into a string instead of integer?)
+            lcd.move_to(9,1)
+            lcd.putstr('ms') #display units
+            time.sleep(0.3)
+        
+        elif duration >= 500 and duration <= 2000:
+            lcd.clear()
+            lcd.move_to(3, 0) #center the text
+            lcd.putstr('long press')
+            lcd.move_to(5, 1)
+            lcd.putstr(str(duration)) #print a variable
+            lcd.move_to(9,1)
+            lcd.putstr('ms') #display units
+            time.sleep(0.3)
+        
+        elif duration > 2000:
+            lcd.clear()
+            lcd.move_to(1, 0) #center the text
+            lcd.putstr('press too long')
+            lcd.move_to(1, 1)
+            lcd.putstr('self destruct')
+            time.sleep(2)
+            lcd.clear()
+            count = 3
+            
+            while count >= 0: #count down
+                lcd.move_to(7, 1) 
+                lcd.putstr(str(count))
+                count -= 1
+                time.sleep(1)
+                
+            else:
+                lcd.clear()
+                lcd.move_to(6, 0)
+                lcd.putstr('boom!')
+                time.sleep(0.3)
+
+    time.sleep_ms(10) #debounce
