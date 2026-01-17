@@ -18,24 +18,25 @@ lcd.putstr('ready 4 input')
 
 while True:
     
+        # check if the LEFT button is pressed
         if button_left.value() == 0:
-            current_input += 'L'
+            current_input += 'L' # append 'L' to the list
             last_input_time == time.ticks_ms()
             print('left')
             lcd.clear()
             lcd.move_to(0,0)
-            lcd.putstr(str(current_input))
+            lcd.putstr(str(current_input)) # print the list of inputs e.g., LLRL
             time.sleep_ms(200)
-
+            
+        # check if the RIGHT button is pressed
         if button_right.value() == 0:
-            current_input += 'R'
+            current_input += 'R' # append 'R' to the list
             last_input_time == time.ticks_ms()
             print('right')
             lcd.clear()
             lcd.move_to(0,0)
-            lcd.putstr(str(current_input))
+            lcd.putstr(str(current_input)) # print the list of inputs e.g., LRR
             time.sleep_ms(200)
-
 
         if len(current_input) == len(passcode):
             if time.ticks_diff(time.ticks_ms(), last_input_time) > 2000 or len(current_input) >= len(passcode):
@@ -60,3 +61,4 @@ while True:
                 lcd.clear()
                 lcd.putstr('ready 4 input')
                 
+
