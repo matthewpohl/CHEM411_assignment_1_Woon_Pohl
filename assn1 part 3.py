@@ -1,37 +1,32 @@
-# setup things you are gonna need. 
+# setup
 from machine import Pin, ADC, I2C
 import i2c_lcd, time 
 
-# setup
-#potentiometer = ADC(Pin(34))
-#potentiometer.ATTN_11DB   # know in advance you're gonna supply 3.3V, so:
+# configure
 i2c_device = I2C(0, scl=Pin(22), sda=Pin(21))
-lcd = i2c_lcd.I2cLcd(i2c_device, 0x27, 2, 16)   # don't need to do the device print thingy
+lcd = i2c_lcd.I2cLcd(i2c_device, 0x27, 2, 16)
 ldr = ADC(Pin(32))
 ldr.atten(ADC.ATTN_11DB)
 led = Pin(14, Pin.OUT)
-# connect vout of potentiometer to pin 32
-# vcc to input voltage (put 3.3V)
-# connect AO or DO
-# he put AO on Pin34
-
+dark_level = 1000
 lcd.clear()
-while True:   # a loop that goes on forever
+
+while True:
     
-   
-    lcd.move_to(0, 0) #center text
-    lcd.putstr("light: %d" %ldr.read() )
+    lcd.move_to(0, 0) # center text on first line of LCD
+    lcd.putstr("light: %d" %ldr.read() ) # display light level
     time.sleep_ms(100)
     
         
-    if ldr.read() > 1000:  # light is certain threshhold, turn on!
+    if ldr.read() > dark_level: # if value of ldr.read() is under dark_level, turn on
         led.value(1)
-        lcd.move_to(0, 1) #center text
-        lcd.putstr("light on!" )
-        time.sleep(0.05)
+        lcd.move_to(0, 1) # center text on second line of LCD
+        lcd.putstr("light on!" ) # display 'light on!'
+        time.sleep_ms(50)
         
-    else:  #else turn off
+    else: # else turn off
         led.value(0)
-        lcd.move_to(0, 1) #center text
-        lcd.putstr("light off" )
+        lcd.move_to(0, 1) # center text on second line of LCD
+        lcd.putstr("light off :(" ) # display 'light off :('
+
         
