@@ -1,3 +1,4 @@
+# matthew pohl and willow woon
 # setup
 from machine import Pin, I2C
 import i2c_lcd, time
@@ -67,3 +68,4 @@ while True:
                 time.sleep(0.3)
 
     time.sleep_ms(10) # let the microprocessor rest momentarily
+
