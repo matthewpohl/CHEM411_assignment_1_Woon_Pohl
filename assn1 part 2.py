@@ -1,3 +1,4 @@
+# matthew pohl and willow woon
 # setup
 from machine import Pin, I2C, ADC
 import time, i2c_lcd
@@ -9,7 +10,7 @@ lcd_device = I2C(0, scl=Pin(22), sda=Pin(21))
 lcd = i2c_lcd.I2cLcd(lcd_device, 0x27, 2, 16)
 
 
-passcode = 'LLRR' # define passcode as a list # define passcode solution
+passcode = 'LLRR' # define passcode solution as a string
 
 current_input = ''
 last_input_time = time.ticks_ms()
@@ -63,5 +64,6 @@ while True:
             lcd.clear()
             lcd.putstr('ready 4 input')
                 
+
 
 
